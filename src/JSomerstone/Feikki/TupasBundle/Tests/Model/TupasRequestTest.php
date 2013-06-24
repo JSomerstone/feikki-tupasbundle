@@ -21,6 +21,8 @@ class TupasRequestTest extends WebTestCase
     {
         return array(
             'empty' => array(''),
+            'negative' => array(-1),
+            'too long' => array('12345'),
         );
     }
 
@@ -32,6 +34,65 @@ class TupasRequestTest extends WebTestCase
     public function setVersionThrowsExceptionOnInvalid($invalidVersion)
     {
        $this->request->setVersion($invalidVersion);
+    }
+
+    public function invalidServiceProviderProvider()
+    {
+        return array(
+            'empty' => array(''),
+            '1 char' => array('1'),
+            '9 chars' => array('123456789'),
+            'too long' => array('1234567890123456'),
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidServiceProviderProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function setServiceProviderThowrsExceptionOnInvalid($provider)
+    {
+        $this->request->setServiceProvider($provider);
+    }
+
+    public function invalidLanguageProvider()
+    {
+        return array(
+            'empty' => array(''),
+            '1 char' => array('F'),
+            'unsupported' => array('RU'),
+            'too long' => array('FII'),
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidLanguageProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function setLanguageThowrsExceptionOnInvalid($language)
+    {
+        $this->request->setLanguage($language);
+    }
+
+    public function invalidRequestIdProvider()
+    {
+        return array(
+            'empty' => array(''),
+            'Specials' => array('f@bår'),
+            'too long' => array('1234567')
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider invalidRequestIdProvider
+     * @expectedException \InvalidArgumentException
+     */
+    public function setRequestIdThowrsExceptionOnInvalid($requestId)
+    {
+        $this->request->setRequestId($requestId);
     }
 
     public function setterAndGetterProvider()

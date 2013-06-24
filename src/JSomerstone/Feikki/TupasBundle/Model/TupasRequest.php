@@ -9,6 +9,10 @@ class TupasRequest
     private $action = 701;
     private $version;
     private $serviceProvider;
+
+    private $supportedLaguages = array(
+        'FI', 'EN', 'SV'
+    );
     private $language;
     private $stamp;
     private $idType;
@@ -21,8 +25,10 @@ class TupasRequest
     private $mac;
 
     public function setVersion($version){
-        if (!preg_match('/^[0-9]{1,4}$/', $version)) {
-            throw new InvalidArgumentException('Version must be numeric 1-4 characters long');
+        if (!preg_match('/^[\d]{1,4}$/', $version)) {
+            throw new InvalidArgumentException(
+                'Version (A01Y_VERS) must be numeric 1-4 characters long'
+            );
         }
         $this->version = $version;
         return $this;
@@ -34,6 +40,11 @@ class TupasRequest
 
     public function setServiceProvider($serviceProvider)
     {
+        if (!preg_match('/^[\da-zA-Z]{10,15}$/', $serviceProvider)) {
+            throw new InvalidArgumentException(
+                'Service Provider (A01Y_RCVID) must be 10-15 chars alfa-numeric'
+            );
+        }
         $this->serviceProvider = $serviceProvider;
         return $this;
     }
@@ -44,6 +55,11 @@ class TupasRequest
 
     public function setLanguage($language)
     {
+        if (!in_array($language, $this->supportedLaguages)) {
+            throw new InvalidArgumentException(
+                'Supported languages (A01Y_LANGCODE) are : ' . implode(', ', $this->supportedLaguages)
+            );
+        }
         $this->language = $language;
         return $this;
     }
@@ -53,6 +69,11 @@ class TupasRequest
     }
 
     public function setRequestId($requestID){
+        if (!preg_match('/^[\da-z]{1,6}$/i', $requestID)) {
+            throw new InvalidArgumentException(
+                'Request ID (A01Y_STAMP) is format YyyyMMddhhmmssxxxxxx'
+            );
+        }
         $this->stamp = sprintf(
             '%s%s',
             date('Ymdhis'),
