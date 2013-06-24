@@ -1,0 +1,4 @@
+j_somerstone_feikki_tupas:
+    resource: "@JSomerstoneFeikkiTupasBundle/Resources/config/routing.yml"
+    prefix:   /
+
