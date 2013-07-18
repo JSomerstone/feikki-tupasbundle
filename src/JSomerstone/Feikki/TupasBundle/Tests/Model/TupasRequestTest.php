@@ -108,6 +108,7 @@ class TupasRequestTest extends WebTestCase
             array('RejectedLink',       'http://feikki.fi/dev/null'),
             array('KeyVersion',         1234),
             array('Algorithm',          'md5'),
+            array('Url',                'http://notdea.fi/dev/null'),
         );
 
     }
@@ -182,5 +183,27 @@ class TupasRequestTest extends WebTestCase
         $expectedHash = hash('sha256', $string);
 
         $this->assertEquals($expectedHash, $this->request->getMac());
+    }
+
+    /**
+     * @test
+     */
+    public function gettingAlgorithmCodeWorks()
+    {
+        $algs = array(
+            'md5' => '01',
+            'sha1' => '02',
+            'sha256' => '03',
+        );
+
+        foreach ($algs as $algorithm => $expectedCode){
+            $this->request->setAlgorithm($algorithm);
+
+            $this->assertEquals(
+                $expectedCode,
+                $this->request->getAlgorithmCode(),
+                "Algorithm '$algorithm' did not return expected alcorithm-code"
+            );
+        }
     }
 }

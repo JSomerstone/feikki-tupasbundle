@@ -6,6 +6,8 @@ use \InvalidArgumentException;
 
 class TupasRequest
 {
+
+    private $url;
     private $action = 701;
     private $version;
     private $serviceProvider;
@@ -23,6 +25,25 @@ class TupasRequest
     private $algorithm = 'sha256';
     private $secret;
     private $mac;
+
+    /**
+     * Set banks URL
+     * @param string $url URL to submit TUPAS request to
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
+    public function setUrl($url){
+        $this->url = $url;
+        return $this;
+    }
+
+    /**
+     * Get banks URL
+     * @return string $url
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
 
     public function setVersion($version){
         if (!preg_match('/^[\d]{1,4}$/', $version)) {
@@ -182,6 +203,16 @@ class TupasRequest
         $string = implode('&', $array);
 
         return hash($this->algorithm, $string);
+    }
+
+    /**
+     * Get two-digit-presentation of given algorithm
+     * See A01Y_ALG in TUPAS documentation
+     * @return string
+     */
+    public function getAlgorithmCode()
+    {
+        return self::codeForAlgorithm($this->algorithm);
     }
 
     private static function codeForAlgorithm($algorithm)
