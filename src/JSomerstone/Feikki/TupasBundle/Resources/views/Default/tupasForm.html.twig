@@ -1,0 +1,18 @@
+
+<form method="POST" action="{{ tupas.url }}" class="tupasform">
+    <input name="A01Y_ACTION_ID" type="HIDDEN" VALUE="{{ constant('ACTION_ID', tupas) }}">
+    <input name="A01Y_VERS" type="HIDDEN" VALUE="{{ tupas.version }}">
+    <input name="A01Y_RCVID" type="HIDDEN" VALUE="{{ tupas.serviceProvider }}">
+    <input name="A01Y_LANGCODE" type="HIDDEN" VALUE="{{ tupas.language }}">
+    <input name="A01Y_STAMP" type="HIDDEN" VALUE="{{ tupas.stamp }}">
+    <input name="A01Y_IDTYPE" type="HIDDEN" VALUE="{{ tupas.idType }}">
+    <input name="A01Y_RETLINK" type="HIDDEN" VALUE="{{ tupas.returnLink }}">
+    <input name="A01Y_CANLINK" type="HIDDEN" VALUE="{{ tupas.cancelLink }}">
+    <input name="A01Y_REJLINK" type="HIDDEN" VALUE="{{ tupas.rejectedLink }}">
+    <input name="A01Y_KEYVERS" type="HIDDEN" VALUE="{{ tupas.keyVersion }}">
+    <input name="A01Y_ALG" type="HIDDEN" VALUE="{{ tupas.algorithmCode }}">
+    <input name="A01Y_MAC" type="HIDDEN" VALUE="{{ tupas.mac }}">
+    <button>
+        _NameOfBank/picture
+    </button>
+</form>

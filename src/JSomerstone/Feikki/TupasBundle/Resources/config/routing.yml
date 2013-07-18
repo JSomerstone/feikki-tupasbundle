@@ -1,3 +1,7 @@
 j_somerstone_feikki_tupas_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: JSomerstoneFeikkiTupasBundle:Default:index }
+
+j_somerstone_feikki_tupas_form_sample:
+    pattern:  /sample/form/
+    defaults: { _controller: JSomerstoneFeikkiTupasBundle:Default:tupasForm }

@@ -1,0 +1,33 @@
+## Sample YML for configuring TupasBundle's TUPAS requsts
+---
+parameters:
+  tupas:
+    common:
+      returnLink: 'https://feikki.fi/tupas/landing'
+      cancelLink: 'https://feikki.fi/tupas/cancel'
+      rejectedLink: 'https://feikki.fi/tupas/rejected'
+      version: 1
+      languageCode: FI
+      idType: 02
+      algorithm: sha256
+
+    custom:
+      nordea:
+          serviceProvider: JSomerstone001
+          url: https://tupas.nordea.fi/
+          secret: QWERTY1234567890+!"#
+          buttonURl: https://tupas.nordea.fi/media/logo.png
+
+    #######
+    # Constants - do not alter
+    #######
+    prefixes:
+        200: nordea
+        310: handelsbanken
+        500: osuuspankki
+        390: spankki
+        800: sampo
+        400: aktia
+        360: tapiola
+        600: alandsbanken
+

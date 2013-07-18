@@ -8,7 +8,7 @@ class TupasRequest
 {
 
     private $url;
-    private $action = 701;
+    const ACTION_ID = 701;
     private $version;
     private $serviceProvider;
 
@@ -74,6 +74,13 @@ class TupasRequest
         return $this->serviceProvider;
     }
 
+    /**
+     * Set language-code of tupas requst, either FI, SV or EN
+     * Case sensitive
+     * @param string $language
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     * @throws InvalidArgumentException
+     */
     public function setLanguage($language)
     {
         if (!in_array($language, $this->supportedLaguages)) {
@@ -186,7 +193,7 @@ class TupasRequest
     private function calculateMac()
     {
         $array = array(
-            $this->action,
+            self::ACTION_ID,
             str_pad($this->version, 4, '0', STR_PAD_LEFT),
             $this->serviceProvider,
             $this->language,
