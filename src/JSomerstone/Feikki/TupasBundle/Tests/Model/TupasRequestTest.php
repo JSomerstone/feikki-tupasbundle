@@ -108,7 +108,6 @@ class TupasRequestTest extends WebTestCase
             array('RejectedLink',       'http://feikki.fi/dev/null'),
             array('KeyVersion',         1234),
             array('Algorithm',          'md5'),
-            array('Url',                'http://notdea.fi/dev/null'),
         );
 
     }

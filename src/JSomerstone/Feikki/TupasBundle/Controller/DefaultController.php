@@ -3,6 +3,7 @@
 namespace JSomerstone\Feikki\TupasBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use JSomerstone\Feikki\TupasBundle\Model\TupasForm;
 use JSomerstone\Feikki\TupasBundle\Model\TupasRequest;
 
 class DefaultController extends Controller
@@ -14,25 +15,51 @@ class DefaultController extends Controller
 
     public function tupasFormAction()
     {
-        $tupasRequest = new TupasRequest();
-        $tupasRequest->setUrl('#')
-            ->setVersion(1)
-            ->setServiceProvider('JSomerstone2013')
-            ->setLanguage('FI')
-            ->setRequestId(substr(uniqid(), 0, 6))
-            ->setIdType('02')
-            ->setReturnLink('#success')
-            ->setCancelLink('#cancelled')
-            ->setRejectedLink('#rejected')
-            ->setKeyVersion(1)
-            ->setAlgorithm('sha256')
-            ->setSecret('TotallyF4k3Secret!');
+        $tupasSettings =  $this->container->getParameter('tupas');
+        $requests = $this->getTupasRequests($tupasSettings['common'], $tupasSettings['custom']);
 
         return $this->render(
             'JSomerstoneFeikkiTupasBundle:Default:formCollection.html.twig',
             array(
-                'tupasRequests' => array($tupasRequest)
+                'tupasRequests' => $requests
             )
         );
+    }
+
+    private function getTupasRequests($defaultSettings, $bankList)
+    {
+        $banks = array();
+        foreach ($bankList as $customSettings) {
+            $banks[] = $this->formTupasForm(array_merge($defaultSettings, $customSettings));
+        }
+        return $banks;
+    }
+
+    private function formTupasForm($settings)
+    {
+        if ( ! isset($settings['buttonUrl'])){
+            $settings['buttonUrl'] = null;
+        }
+        if ( ! isset($settings['buttonText'])){
+            $settings['buttonText'] = null;
+        }
+        $tupasRequest = new TupasRequest();
+        $tupasRequest->setVersion(1)
+            ->setServiceProvider($settings['serviceProvider'])
+            ->setLanguage($settings['languageCode'])
+            ->setRequestId(substr(uniqid(), 0, 6))
+            ->setIdType($settings['idType'])
+            ->setReturnLink($settings['returnLink'])
+            ->setCancelLink($settings['cancelLink'])
+            ->setRejectedLink($settings['rejectedLink'])
+            ->setKeyVersion(1)
+            ->setAlgorithm($settings['algorithm'])
+            ->setSecret($settings['secret']);
+
+        $form = new TupasForm($tupasRequest, $settings['url']);
+        $form->setButtonUrl($settings['buttonUrl'])
+            ->setButtonText($settings['buttonText']);
+        
+        return $form;
     }
 }
