@@ -4,16 +4,14 @@ namespace JSomerstone\Feikki\TupasBundle\Model;
 
 use \InvalidArgumentException;
 
-class TupasRequest
+class TupasRequest extends TupasBase
 {
-
-    const ACTION_ID = 701;
-    private $version;
-    private $serviceProvider;
-
     private $supportedLaguages = array(
         'FI', 'EN', 'SV'
     );
+
+    private $version;
+    private $serviceProvider;
     private $language;
     private $stamp;
     private $idType;
@@ -21,9 +19,7 @@ class TupasRequest
     private $cancelLink;
     private $rejectionLink;
     private $keyVersion = 1;
-    private $algorithm = 'sha256';
     private $secret;
-    private $mac;
 
     public function setVersion($version){
         if (!preg_match('/^[\d]{1,4}$/', $version)) {
@@ -153,17 +149,6 @@ class TupasRequest
         return $this->keyVersion;
     }
 
-    public function setAlgorithm($alg)
-    {
-        $this->algorithm = $alg;
-        return $this;
-    }
-
-    public function getAlgorithm()
-    {
-        return $this->algorithm;
-    }
-
     public function setSecret($secret)
     {
         $this->secret = $secret;
@@ -172,12 +157,7 @@ class TupasRequest
 
     public function getMac()
     {
-        return $this->calculateMac();
-    }
-
-    private function calculateMac()
-    {
-        $array = array(
+        return $this->calculateMac(
             self::ACTION_ID,
             str_pad($this->version, 4, '0', STR_PAD_LEFT),
             $this->serviceProvider,
@@ -188,13 +168,9 @@ class TupasRequest
             $this->cancelLink,
             $this->rejectionLink,
             str_pad($this->keyVersion, 4, '0', STR_PAD_LEFT),
-            self::codeForAlgorithm($this->algorithm),
-            $this->secret,
-            ''
+            $this->codeForAlgorithm($this->algorithm),
+            $this->secret
         );
-        $string = implode('&', $array);
-
-        return hash($this->algorithm, $string);
     }
 
     /**
@@ -204,22 +180,6 @@ class TupasRequest
      */
     public function getAlgorithmCode()
     {
-        return self::codeForAlgorithm($this->algorithm);
+        return $this->codeForAlgorithm($this->algorithm);
     }
-
-    private static function codeForAlgorithm($algorithm)
-    {
-        switch ($algorithm)
-        {
-            default:
-                throw new \InvalidArgumentException("Unsupported algorithm '$algorithm'");
-            case 'md5':
-                return '01';
-            case 'sha1':
-                return '02';
-            case 'sha256':
-                return '03';
-        }
-    }
-
 }
