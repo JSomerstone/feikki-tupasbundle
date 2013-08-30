@@ -5,12 +5,34 @@ namespace JSomerstone\Feikki\TupasBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use JSomerstone\Feikki\TupasBundle\Model\TupasForm;
 use JSomerstone\Feikki\TupasBundle\Model\TupasRequest;
+use JSomerstone\Feikki\TupasBundle\Model\TupasValidator;
 
 class DefaultController extends Controller
 {
     public function indexAction($name)
     {
         return $this->render('JSomerstoneFeikkiTupasBundle:Default:index.html.twig', array('name' => $name));
+    }
+
+    public function identifyAction($bank)
+    {
+        $tupasSettings =  $this->container->getParameter('tupas');
+        $httpRequest = $this->getRequest()->request->all();
+
+        $sharedSecret = $tupasSettings['custom'][$bank]['secret'];
+        $validator = new TupasValidator();
+        $validator->validateTupasRequest($httpRequest, $sharedSecret);
+
+
+        return $this->render(
+            'JSomerstoneFeikkiTupasBundle:Default:fakeBank.html.twig',
+            array(
+                'bankName' => ucfirst($bank),
+                'tupasRequest' => $httpRequest,
+                'errorMessage' => $validator->errorMessage,
+                'debugMessages' => $validator->debugMessages
+            )
+        );
     }
 
     public function tupasFormAction()
@@ -59,7 +81,7 @@ class DefaultController extends Controller
         $form = new TupasForm($tupasRequest, $settings['url']);
         $form->setButtonUrl($settings['buttonUrl'])
             ->setButtonText($settings['buttonText']);
-        
+
         return $form;
     }
 }

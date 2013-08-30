@@ -54,8 +54,9 @@ class TupasValidatorTest extends WebTestCase
      */
     public function failingToProvideRequiredParameterThworsException($fakePost)
     {
-        $this->setExpectedException('InvalidArgumentException');
-        $this->validator->validateTupasRequest($fakePost, 'foobar');
+        $this->assertFalse(
+            $this->validator->validateTupasRequest($fakePost, 'foobar')
+        );
     }
 
     /**
@@ -63,13 +64,33 @@ class TupasValidatorTest extends WebTestCase
      */
     public function macMiscalculationIsDetected()
     {
-        $this->setExpectedException('LogicException');
         $sharedSecret = 'S3cr370fF31kk1dotf1';
         $invalidRequest = $this->getValidTupasRequest($sharedSecret);
         //Now let's make it invalid
         $invalidRequest['A01Y_MAC'] = str_shuffle($invalidRequest['A01Y_MAC']);
 
-        $this->validator->validateTupasRequest($invalidRequest, $sharedSecret);
+        $this->assertFalse(
+            $this->validator->validateTupasRequest($invalidRequest, $sharedSecret)
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function invalidAlgorithmIsDetected()
+    {
+        $sharedSecret = 'S3cr370fF31kk1dotf1';
+        $invalidRequest = $this->getValidTupasRequest($sharedSecret);
+        //Now let's make it invalid
+        $invalidRequest['A01Y_ALG'] = 'fuuba';
+
+        $this->assertFalse(
+            $this->validator->validateTupasRequest($invalidRequest, $sharedSecret)
+        );
+        $this->assertRegExp(
+            '/^Unsupported hashing algorithm code /',
+            $this->validator->errorMessage
+        );
     }
 
     /**

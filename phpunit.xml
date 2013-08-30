@@ -40,4 +40,12 @@
         <ini name="zend.enable_gc" value="0" />
     </php>
 
+    <logging>
+        <log type="coverage-html"
+            target="doc/coverage/"
+            charset="utf-8"
+            highlight="true"
+            lowUpperBound="60"
+            highLowerBound="90" />
+    </logging>
 </phpunit>

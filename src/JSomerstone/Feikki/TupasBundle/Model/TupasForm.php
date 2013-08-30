@@ -8,7 +8,7 @@ class TupasForm
 {
     /**
      *
-     * @var TuåasRequest
+     * @var TupasRequest
      */
     private $request;
 

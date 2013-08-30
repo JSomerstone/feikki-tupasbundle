@@ -205,4 +205,22 @@ class TupasRequestTest extends WebTestCase
             );
         }
     }
+
+    /**
+     * @test
+     */
+    public function settingInvalidArgorithmThrowsException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->request->setAlgorithm('fuubar');
+    }
+
+    /**
+     * @test
+     */
+    public function settingInvalidIdTypeThrowsException()
+    {
+        $this->setExpectedException('\InvalidArgumentException');
+        $this->request->setIdType('fuubar');
+    }
 }

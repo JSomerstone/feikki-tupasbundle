@@ -5,3 +5,8 @@ j_somerstone_feikki_tupas_homepage:
 j_somerstone_feikki_tupas_form_sample:
     pattern:  /sample/form/
     defaults: { _controller: JSomerstoneFeikkiTupasBundle:Default:tupasForm }
+
+j_somerstone_feikki_tupas_identify:
+    path:  /identify/{bank}/
+    defaults:
+      _controller: JSomerstoneFeikkiTupasBundle:Default:identify

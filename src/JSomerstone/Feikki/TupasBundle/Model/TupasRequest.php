@@ -27,7 +27,7 @@ class TupasRequest extends TupasBase
                 'Version (A01Y_VERS) must be numeric 1-4 characters long'
             );
         }
-        $this->version = $version;
+        $this->version = str_pad($version, 4, '0', STR_PAD_LEFT);
         return $this;
     }
 
@@ -140,7 +140,8 @@ class TupasRequest extends TupasBase
 
     public function setKeyVersion($version)
     {
-        $this->keyVersion = $version;
+
+        $this->keyVersion = str_pad($version, 4, '0', STR_PAD_LEFT);
         return $this;
     }
 
@@ -159,7 +160,7 @@ class TupasRequest extends TupasBase
     {
         return $this->calculateMac(
             self::ACTION_ID,
-            str_pad($this->version, 4, '0', STR_PAD_LEFT),
+            $this->version,
             $this->serviceProvider,
             $this->language,
             $this->stamp,
@@ -167,7 +168,7 @@ class TupasRequest extends TupasBase
             $this->returnLink,
             $this->cancelLink,
             $this->rejectionLink,
-            str_pad($this->keyVersion, 4, '0', STR_PAD_LEFT),
+            $this->keyVersion,
             $this->codeForAlgorithm($this->algorithm),
             $this->secret
         );

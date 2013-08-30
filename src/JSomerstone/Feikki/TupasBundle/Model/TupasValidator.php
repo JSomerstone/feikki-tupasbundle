@@ -6,6 +6,9 @@ use \LogicException;
 
 class TupasValidator extends TupasBase
 {
+    public $errorMessage;
+    public $debugMessages = array();
+
     /**
      * Validates TUPAS authentication request
      * @param array $post All POST-parameters from request
@@ -14,8 +17,14 @@ class TupasValidator extends TupasBase
      */
     public function validateTupasRequest($post, $sharedSecret)
     {
-        $this->checkRequiredForRequest($post);
-        $this->checkMac($post, $sharedSecret);
+        try {
+            $this->checkRequiredForRequest($post);
+            $this->checkMac($post, $sharedSecret);
+        } catch(\Exception $e)
+        {
+            $this->errorMessage = $e->getMessage();
+            return false;
+        }
         return true;
     }
 
@@ -44,6 +53,7 @@ class TupasValidator extends TupasBase
         foreach ($requestedParameters as $param) {
             if (!isset($post[$param])) {
                 $missing[] = $param;
+                $this->debugMessages[] = "Missing parameter '$param' from request";
             }
         }
         if (!empty($missing)) {
@@ -51,6 +61,7 @@ class TupasValidator extends TupasBase
                 'Missing required parameter(s): ' . implode(', ', $missing)
             );
         }
+        $this->debugMessages[] = "All required parameters present";
         return;
     }
 
@@ -80,10 +91,20 @@ class TupasValidator extends TupasBase
         );
 
         if ($expectedMac !== $post['A01Y_MAC']) {
+            $this->debugPost($post, $expectedMac, $secret, $algorithm);
             throw new LogicException(
                 'MAC-checksum mismatched - using algoritm '.$algorithm
             );
         }
+        $this->debugMessages[] = 'MAC-checksum matches';
         return;
+    }
+
+    private function debugPost($post, $actualMac, $secret, $algorithm)
+    {
+        $expectedMac = $post['A01Y_MAC'];
+        unset($post['A01Y_MAC']);
+        $string = implode('&', $post) . '&' . $secret . '&';
+        $this->debugMessages[] = "Expected hash('$algorithm', $string) to be '$expectedMac', got '$actualMac'";
     }
 }
