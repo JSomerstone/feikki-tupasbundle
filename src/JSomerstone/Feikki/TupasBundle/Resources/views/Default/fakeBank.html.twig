@@ -1,0 +1,27 @@
+<h1>{{bankName}} TUPAS tunnistautumispalvelu</h1>
+<i>...not!</i>
+{%if errorMessage%}
+    <h2>Virhe:</h2>
+    <p>{{errorMessage}}</p>
+{%endif%}
+
+<hr>
+
+<h4>Tunnistautumispyyntö:</h4>
+<pre>
+    {% for message in debugMessages %}
+        {{ message }}<br>
+    {% endfor %}
+</pre>
+<table>
+    <tr>
+        <th>Avain</th>
+        <th>Arvo</th>
+    </tr>
+    {% for key,value in tupasRequest %}
+        <tr>
+            <td>{{ key }}</td>
+            <td>{{ value }}</td>
+        </tr>
+    {% endfor %}
+</table>
