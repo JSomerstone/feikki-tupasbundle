@@ -21,6 +21,12 @@ class TupasRequest extends TupasBase
     private $keyVersion = 1;
     private $secret;
 
+    /**
+     *
+     * @param int $version
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     * @throws InvalidArgumentException
+     */
     public function setVersion($version){
         if (!preg_match('/^[\d]{1,4}$/', $version)) {
             throw new InvalidArgumentException(
@@ -35,6 +41,12 @@ class TupasRequest extends TupasBase
         return $this->version;
     }
 
+    /**
+     *
+     * @param string $serviceProvider
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     * @throws InvalidArgumentException
+     */
     public function setServiceProvider($serviceProvider)
     {
         if (!preg_match('/^[\da-zA-Z]{10,15}$/', $serviceProvider)) {
@@ -72,6 +84,12 @@ class TupasRequest extends TupasBase
         return $this->language;
     }
 
+    /**
+     *
+     * @param string $requestID
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     * @throws InvalidArgumentException
+     */
     public function setRequestId($requestID){
         if (!preg_match('/^[\da-z]{1,6}$/i', $requestID)) {
             throw new InvalidArgumentException(
@@ -90,6 +108,12 @@ class TupasRequest extends TupasBase
         return $this->stamp;
     }
 
+    /**
+     *
+     * @param string $idType
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     * @throws InvalidArgumentException
+     */
     public function setIdType($idType)
     {
         if (!preg_match('/^[0-4][123]$/', $idType)) {
@@ -105,6 +129,11 @@ class TupasRequest extends TupasBase
         return $this->idType;
     }
 
+    /**
+     *
+     * @param string $link URL to return from TUPAS-service provider
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
     public function setReturnLink($link)
     {
         $this->returnLink = $link;
@@ -116,6 +145,11 @@ class TupasRequest extends TupasBase
         return $this->returnLink;
     }
 
+    /**
+     *
+     * @param string $link URL to return on Cancel
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
     public function setCancelLink($link)
     {
         $this->cancelLink = $link;
@@ -127,6 +161,11 @@ class TupasRequest extends TupasBase
         return $this->cancelLink;
     }
 
+    /**
+     *
+     * @param string $link URL to return on rejection
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
     public function setRejectedLink($link)
     {
         $this->rejectionLink = $link;
@@ -138,6 +177,11 @@ class TupasRequest extends TupasBase
         return $this->rejectionLink;
     }
 
+    /**
+     *
+     * @param int $version
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
     public function setKeyVersion($version)
     {
 
@@ -150,12 +194,21 @@ class TupasRequest extends TupasBase
         return $this->keyVersion;
     }
 
+    /**
+     * Set the pre-shared secter
+     * @param string $secret
+     * @return \JSomerstone\Feikki\TupasBundle\Model\TupasRequest
+     */
     public function setSecret($secret)
     {
         $this->secret = $secret;
         return $this;
     }
 
+    /**
+     *
+     * @return string $mac
+     */
     public function getMac()
     {
         return $this->calculateMac(
